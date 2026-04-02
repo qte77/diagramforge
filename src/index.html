@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>diagramforge</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='10' y='10' width='35' height='35' rx='6' fill='%2356B4F9'/><rect x='55' y='10' width='35' height='35' rx='6' fill='%2366E088'/><rect x='10' y='55' width='35' height='35' rx='6' fill='%23FFB84D'/><rect x='55' y='55' width='35' height='35' rx='6' fill='%23FF6B6B'/><line x1='45' y1='27' x2='55' y2='27' stroke='%23555' stroke-width='3'/><line x1='27' y1='45' x2='27' y2='55' stroke='%23555' stroke-width='3'/><line x1='72' y1='45' x2='72' y2='55' stroke='%23555' stroke-width='3'/><line x1='45' y1='72' x2='55' y2='72' stroke='%23555' stroke-width='3'/></svg>">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; height: 100vh; display: flex; flex-direction: column; }
+    #toolbar {
+      display: flex; align-items: center; gap: 8px; padding: 6px 12px;
+      background: #f5f5f5; border-bottom: 1px solid #ddd; flex-shrink: 0; flex-wrap: wrap;
+    }
+    #status { width: 10px; height: 10px; border-radius: 50%; background: grey; }
+    #status-text { font-size: 13px; color: #666; }
+    select, button { padding: 4px 10px; font-size: 13px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; background: #fff; }
+    button:hover { background: #eee; }
+    #xml-panel { display: none; padding: 8px 12px; border-bottom: 1px solid #ddd; background: #fafafa; }
+    #xml-panel textarea { width: 100%; height: 120px; font-family: monospace; font-size: 12px; resize: vertical; }
+    #xml-panel .row { display: flex; gap: 8px; margin-top: 6px; }
+    input[type="file"] { font-size: 13px; }
+    #drawio { flex: 1; border: none; width: 100%; }
+  </style>
+</head>
+<body>
+  <div id="toolbar">
+    <span id="status"></span>
+    <span id="status-text">Connecting...</span>
+    <select id="diagram-select"><option value="">-- diagrams --</option></select>
+    <button id="btn-xml">XML</button>
+    <button id="btn-export">Export SVG</button>
+    <input type="file" id="file-input" accept=".drawio,.xml">
+  </div>
+  <div id="xml-panel">
+    <textarea id="xml-input" placeholder="Paste draw.io XML here..."></textarea>
+    <div class="row">
+      <button id="btn-load">Load into editor</button>
+    </div>
+  </div>
+  <iframe id="drawio" src="https://embed.diagrams.net/?embed=1&proto=json&stealth=1&spin=1"></iframe>
+
+  <script>
+    const iframe = document.getElementById('drawio');
+    const statusDot = document.getElementById('status');
+    const statusText = document.getElementById('status-text');
+    const xmlPanel = document.getElementById('xml-panel');
+    const xmlInput = document.getElementById('xml-input');
+    const diagramSelect = document.getElementById('diagram-select');
+
+    let ws = null;
+    let drawioReady = false;
+    let pendingExport = null;
+    let pendingXml = null; // queue XML until draw.io is ready
+
+    // — draw.io postMessage handling —
+    window.addEventListener('message', (e) => {
+      if (e.source !== iframe.contentWindow) return;
+      let msg;
+      try { msg = JSON.parse(e.data); } catch { return; }
+
+      if (msg.event === 'init') {
+        drawioReady = true;
+        if (pendingXml) { loadXml(pendingXml); pendingXml = null; }
+      } else if (msg.event === 'export') {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: 'export-result', data: msg.data, format: msg.format }));
+        }
+        if (pendingExport) {
+          pendingExport(msg.data, msg.format);
+          pendingExport = null;
+        }
+      }
+    });
+
+    function loadXml(xml) {
+      if (!drawioReady) { pendingXml = xml; return; }
+      iframe.contentWindow.postMessage(JSON.stringify({
+        action: 'load', xml, autosave: 1
+      }), '*');
+    }
+
+    function requestExport(format = 'svg') {
+      iframe.contentWindow.postMessage(JSON.stringify({
+        action: 'export', format
+      }), '*');
+    }
+
+    // — Diagram file dropdown —
+    let currentDiagram = ''; // track selected file
+
+    async function refreshDiagramList() {
+      const prev = currentDiagram;
+      try {
+        const res = await fetch('/diagrams');
+        if (!res.ok) return;
+        const files = await res.json();
+        diagramSelect.innerHTML = '<option value="">-- diagrams --</option>';
+        for (const f of files) {
+          const opt = document.createElement('option');
+          opt.value = f; opt.textContent = f;
+          if (f === prev) opt.selected = true;
+          diagramSelect.appendChild(opt);
+        }
+      } catch { /* standalone mode — no server */ }
+    }
+
+    diagramSelect.onchange = async () => {
+      const name = diagramSelect.value;
+      currentDiagram = name;
+      if (!name) return;
+      try {
+        const res = await fetch(`/diagrams/${encodeURIComponent(name)}`);
+        if (!res.ok) return;
+        const xml = await res.text();
+        loadXml(xml);
+      } catch { /* ignore */ }
+    };
+
+    // — WebSocket (optional — graceful degradation) —
+    function connectWs() {
+      try {
+        const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+        ws = new WebSocket(`${proto}//${location.host}/ws`);
+      } catch { setStatus('grey', 'Standalone mode'); return; }
+
+      ws.onopen = () => { setStatus('green', 'Connected'); refreshDiagramList(); };
+      ws.onclose = () => { setStatus('red', 'Disconnected'); setTimeout(connectWs, 3000); };
+      ws.onerror = () => { ws.close(); };
+
+      ws.onmessage = (e) => {
+        let msg;
+        try { msg = JSON.parse(e.data); } catch { return; }
+
+        if (msg.type === 'diagram') {
+          loadXml(msg.xml);
+        } else if (msg.type === 'export-request') {
+          requestExport(msg.format || 'svg');
+        }
+      };
+    }
+
+    function setStatus(color, text) {
+      statusDot.style.background = color;
+      statusText.textContent = text;
+    }
+
+    // — Manual controls —
+    document.getElementById('btn-xml').onclick = () => {
+      xmlPanel.style.display = xmlPanel.style.display === 'none' ? 'block' : 'none';
+    };
+
+    document.getElementById('btn-load').onclick = () => {
+      if (xmlInput.value.trim()) loadXml(xmlInput.value.trim());
+    };
+
+    document.getElementById('btn-export').onclick = () => {
+      pendingExport = (data, format) => {
+        const blob = new Blob([data], { type: format === 'png' ? 'image/png' : 'image/svg+xml' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `diagram.${format || 'svg'}`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+      };
+      requestExport('svg');
+    };
+
+    document.getElementById('file-input').onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => loadXml(reader.result);
+      reader.readAsText(file);
+    };
+
+    // — Init —
+    connectWs();
+    refreshDiagramList();
+  </script>
+</body>
+</html>
