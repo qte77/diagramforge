@@ -22,7 +22,7 @@ Bridge server connecting Claude Code to draw.io in the browser. Claude POSTs XML
     </mxGraphModel>
   </diagram>
 </mxfile>
-```
+```bash
 
 - Cells `id="0"` and `id="1" parent="0"` are **mandatory**
 - Vertex: `<mxCell id="2" value="Label" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;"><mxGeometry x="100" y="100" width="120" height="60" as="geometry"/></mxCell>`

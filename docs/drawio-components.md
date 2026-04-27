@@ -120,7 +120,7 @@ The embedded draw.io editor is controlled via `window.postMessage`. There is **n
 {action: "configure", config: {
   defaultLibraries: "general;uml;network;aws3;azure;gcp"
 }}
-```
+```text
 
 Available library keys: `general`, `uml`, `er`, `bpmn`, `flowchart`, `mindmap`, `network`, `aws3`, `aws4`, `azure`, `gcp`, `ibm`, `cisco`, `mscae`, `pid`, `electrical`, `floorplan`.
 

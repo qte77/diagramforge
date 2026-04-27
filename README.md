@@ -8,7 +8,7 @@ Bridge server connecting Claude Code to draw.io in the browser. Live diagram ren
 npm install
 npm run dev
 # → http://localhost:3000
-```
+```text
 
 ## How It Works
 
@@ -16,7 +16,7 @@ npm run dev
 Claude Code ── POST /diagram ──→ [server :3000] ── WebSocket ──→ Browser
                                        ↑                           ↓
                               watches diagrams/           draw.io iframe renders
-```
+```text
 
 See [diagrams/architecture.drawio](diagrams/architecture.drawio) for the full architecture diagram.
 
