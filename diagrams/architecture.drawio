@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mxfile>
   <diagram name="diagramforge architecture" id="arch13">
-    <mxGraphModel dx="960" dy="560" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="960" pageHeight="560">
+    <mxGraphModel dx="1020" dy="560" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1020" pageHeight="560">
       <root>
         <mxCell id="0"/>
         <mxCell id="1" parent="0"/>
 
-        <!-- Claude Code: x=30 y=40 w=150 h=202 -->
+        <!-- Claude Code: x=30 y=40 w=200 h=202 -->
         <mxCell id="g1" value="Claude Code" style="swimlane;html=1;fillColor=#f5f5f5;strokeColor=#666;startSize=24;fontSize=12;fontStyle=1;rounded=1;" vertex="1" parent="1">
-          <mxGeometry x="30" y="40" width="150" height="202" as="geometry"/>
+          <mxGeometry x="30" y="40" width="200" height="202" as="geometry"/>
         </mxCell>
         <mxCell id="c1" value="Interactive" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff;strokeColor=#666;fontStyle=1;fontSize=11;" vertex="1" parent="g1">
-          <mxGeometry x="15" y="44" width="120" height="26" as="geometry"/>
+          <mxGeometry x="15" y="44" width="170" height="26" as="geometry"/>
         </mxCell>
         <mxCell id="c0" value="/voice" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff;strokeColor=#666;fontSize=10;fontFamily=monospace;" vertex="1" parent="g1">
-          <mxGeometry x="30" y="100" width="90" height="26" as="geometry"/>
+          <mxGeometry x="40" y="100" width="120" height="26" as="geometry"/>
         </mxCell>
         <mxCell id="c2" value="claude -p" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff;strokeColor=#666;fontSize=10;fontFamily=monospace;" vertex="1" parent="g1">
-          <mxGeometry x="15" y="156" width="120" height="26" as="geometry"/>
+          <mxGeometry x="15" y="156" width="170" height="26" as="geometry"/>
         </mxCell>
         <mxCell id="ic1" value="input" style="strokeWidth=1;strokeColor=#999;fontSize=8;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="c1" target="c0" parent="g1">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
-        <!-- server.ts: x=300 y=40 w=200 h=202 -->
+        <!-- server.ts: x=350 y=40 w=200 h=202 -->
         <mxCell id="g2" value="server.ts :3000" style="swimlane;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;startSize=24;fontSize=12;fontStyle=1;rounded=1;" vertex="1" parent="1">
-          <mxGeometry x="300" y="40" width="200" height="202" as="geometry"/>
+          <mxGeometry x="350" y="40" width="200" height="202" as="geometry"/>
         </mxCell>
         <mxCell id="s1" value="HTTP server" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="g2">
           <mxGeometry x="15" y="44" width="170" height="26" as="geometry"/>
@@ -43,18 +43,18 @@
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
-        <!-- Browser: x=620 y=40 w=190 h=206 -->
+        <!-- Browser: x=670 y=40 w=200 h=202 -->
         <mxCell id="g3" value="Browser" style="swimlane;html=1;fillColor=#d5e8d4;strokeColor=#82b366;startSize=24;fontSize=12;fontStyle=1;rounded=1;" vertex="1" parent="1">
-          <mxGeometry x="620" y="40" width="190" height="206" as="geometry"/>
+          <mxGeometry x="670" y="40" width="200" height="202" as="geometry"/>
         </mxCell>
         <mxCell id="b1" value="index.html" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff;strokeColor=#82b366;fontStyle=1;fontSize=11;" vertex="1" parent="g3">
-          <mxGeometry x="15" y="44" width="160" height="26" as="geometry"/>
+          <mxGeometry x="15" y="44" width="170" height="26" as="geometry"/>
         </mxCell>
         <mxCell id="b2" value="WS client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff;strokeColor=#82b366;fontSize=10;fontFamily=monospace;" vertex="1" parent="g3">
-          <mxGeometry x="15" y="100" width="160" height="26" as="geometry"/>
+          <mxGeometry x="15" y="100" width="170" height="26" as="geometry"/>
         </mxCell>
         <mxCell id="b3" value="draw.io iframe" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=11;" vertex="1" parent="g3">
-          <mxGeometry x="15" y="156" width="160" height="30" as="geometry"/>
+          <mxGeometry x="15" y="156" width="170" height="26" as="geometry"/>
         </mxCell>
         <mxCell id="ib1" value="receives" style="strokeWidth=1;strokeColor=#82b366;fontSize=8;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="b1" target="b2" parent="g3">
           <mxGeometry relative="1" as="geometry"/>
@@ -63,9 +63,9 @@
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
-        <!-- Filesystem: x=330 y=340 w=140 h=50 -->
+        <!-- Filesystem: x=380 y=340 w=140 h=50 -->
         <mxCell id="fs" value="diagrams/*.drawio" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;size=8;" vertex="1" parent="1">
-          <mxGeometry x="330" y="340" width="140" height="50" as="geometry"/>
+          <mxGeometry x="380" y="340" width="140" height="50" as="geometry"/>
         </mxCell>
 
         <!-- Edge: Claude → server (HTTP POST, center of groups) -->
@@ -81,7 +81,7 @@
         <!-- Edge: Claude → filesystem (writes .drawio) -->
         <mxCell id="e2" value="writes .drawio" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeWidth=1;strokeColor=#d6b656;dashed=1;fontSize=9;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" edge="1" source="g1" target="fs" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <Array as="points"><mxPoint x="105" y="365"/></Array>
+            <Array as="points"><mxPoint x="130" y="365"/></Array>
           </mxGeometry>
         </mxCell>
 
