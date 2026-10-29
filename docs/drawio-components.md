@@ -5,6 +5,7 @@ Available shapes and styles for use in `.drawio` XML files.
 ## Shapes (`style=` values)
 
 ### Basic
+
 | Shape | Style | Notes |
 |-------|-------|-------|
 | Rectangle | `rounded=0;whiteSpace=wrap;html=1;` | Default shape |
@@ -15,6 +16,7 @@ Available shapes and styles for use in `.drawio` XML files.
 | Cloud | `ellipse;shape=cloud;whiteSpace=wrap;html=1;` | |
 
 ### Technical
+
 | Shape | Style | Notes |
 |-------|-------|-------|
 | Process | `shape=process;whiteSpace=wrap;html=1;size=0.1;` | Double-sided bar |
@@ -25,6 +27,7 @@ Available shapes and styles for use in `.drawio` XML files.
 | Note | `shape=note;whiteSpace=wrap;html=1;size=14;` | |
 
 ### Infrastructure
+
 | Shape | Style | Notes |
 |-------|-------|-------|
 | Cube | `shape=cube;whiteSpace=wrap;html=1;size=10;` | Server/3D |
@@ -35,6 +38,7 @@ Available shapes and styles for use in `.drawio` XML files.
 | Callout | `shape=callout;whiteSpace=wrap;html=1;size=20;position=0.5;` | |
 
 ### Containers
+
 | Shape | Style | Notes |
 |-------|-------|-------|
 | Swimlane | `swimlane;whiteSpace=wrap;html=1;startSize=25;` | Header + body |
