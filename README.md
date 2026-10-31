@@ -12,7 +12,7 @@ npm run dev
 
 ## How It Works
 
-```
+```text
 Claude Code ── POST /diagram ──→ [server :3000] ── WebSocket ──→ Browser
                                        ↑                           ↓
                               watches diagrams/           draw.io iframe renders
@@ -36,4 +36,4 @@ See [diagrams/architecture.drawio](diagrams/architecture.drawio) for the full ar
 
 ## GitHub Pages
 
-Same `index.html` works at [qte77.github.io/diagramforge](https://qte77.github.io/diagramforge) — WebSocket is optional, degrades to manual XML paste.
+The same `index.html` can be served from GitHub Pages (not deployed yet) — WebSocket is optional, degrades to manual XML paste.
